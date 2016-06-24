@@ -272,7 +272,7 @@ void convertProtoToLuaV1(const caffe::NetParameter &netparam, const char* lua_na
       case caffe::V1LayerParameter::CONCAT:
       {
       	char buf[1024];
-      	auto &param = layer.concat_param()
+      	auto &param = layer.concat_param();
       	sprintf(buf, "nn.Concat(%d)", param.axis());
         lines.emplace_back(layer.name(), buf);
        	break;
@@ -510,15 +510,15 @@ void convertProtoToLuaV2(const caffe::NetParameter &netparam, const char* lua_na
         lines.emplace_back(layer.name(), "nn.ReLU(true)");
     }
      //new layers
-     case caffe::V1LayerParameter::CONCAT:
+    if(layer.type() == "Concat")
      {
      	char buf[1024];
-     	auto &param = layer.concat_param()
+     	auto &param = layer.concat_param();
      	sprintf(buf, "nn.Concat(%d)", param.axis());
        lines.emplace_back(layer.name(), buf);
       	break;
      }
-     case caffe::V1LayerParameter::SPLIT:
+     if(layer.type() == "Split")
      {
        lines.emplace_back(layer.name(), "nn.SplitTable()");
        break;
