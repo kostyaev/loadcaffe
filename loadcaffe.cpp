@@ -273,7 +273,7 @@ void convertProtoToLuaV1(const caffe::NetParameter &netparam, const char* lua_na
       {
       	char buf[1024];
       	auto &param = layer.concat_param();
-      	sprintf(buf, "nn.JoinTable(%d)", param.axis());
+      	sprintf(buf, "nn.JoinTable(%d)", param.axis() + 1);
         lines.emplace_back(layer.name(), buf);
        	break;
       }
@@ -514,8 +514,8 @@ void convertProtoToLuaV2(const caffe::NetParameter &netparam, const char* lua_na
      {
      	char buf[1024];
      	auto &param = layer.concat_param();
-     	sprintf(buf, "nn.JoinTable(%d)", param.axis());
-       lines.emplace_back(layer.name(), buf);
+     	sprintf(buf, "nn.JoinTable(%d)", param.axis() + 1);
+        lines.emplace_back(layer.name(), buf);
       	break;
      }
      if(layer.type() == "Split")
