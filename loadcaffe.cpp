@@ -267,6 +267,24 @@ void convertProtoToLuaV1(const caffe::NetParameter &netparam, const char* lua_na
         }
         break;
       }
+
+      //new layers
+      case caffe::V1LayerParameter::CONCAT:
+      {
+      	char buf[1024];
+      	auto &param = layer.concat_param()
+      	sprintf(buf, "nn.Concat(%d)", param.axis());
+        lines.emplace_back(layer.name(), buf);
+       	break;
+      }
+
+      case caffe::V1LayerParameter::SPLIT:
+      {
+        lines.emplace_back(layer.name(), "nn.SplitTable()");
+        break;
+      }
+      //end
+
       case caffe::V1LayerParameter::LRN:
       {
         auto &param = layer.lrn_param();
@@ -491,6 +509,22 @@ void convertProtoToLuaV2(const caffe::NetParameter &netparam, const char* lua_na
       else
         lines.emplace_back(layer.name(), "nn.ReLU(true)");
     }
+     //new layers
+     case caffe::V1LayerParameter::CONCAT:
+     {
+     	char buf[1024];
+     	auto &param = layer.concat_param()
+     	sprintf(buf, "nn.Concat(%d)", param.axis());
+       lines.emplace_back(layer.name(), buf);
+      	break;
+     }
+     case caffe::V1LayerParameter::SPLIT:
+     {
+       lines.emplace_back(layer.name(), "nn.SplitTable()");
+       break;
+     }
+      //end
+
     if(layer.type() == "Sigmoid")
     {
       if(cuda_package_type == CUDNN)
